@@ -16,7 +16,9 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const user = require('./routes/users');
+const auth = require('./routes/auth');
 
+app.use('/api/auth', auth);
 app.use('/api/user', user);
 
 const port = process.env.PORT || 8080;

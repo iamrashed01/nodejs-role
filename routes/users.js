@@ -6,11 +6,14 @@ const express = require('express');
 const route = express.Router();
 const User = require('../model/user');
 const validate = require('../validation/user');
+const auth = require('../middleware/auth');
 
 // get users
-route.get('/',async (req, res) => {
-  const user = await User.find().select('-_id first_name last_name email');
-  res.json({data: user, message: 'User Lists', success: true});
+route.get('/', auth, async (req, res) => {
+  const user = await User.findOne({ email: req.user.email }).select('-_id first_name last_name email admin');
+  if (!user) return res.status(405).json({ message: 'access denied', success: false });
+
+  res.json({ data: user, message: 'User data retrieved successfully.', success: true });
 })
 
 // create user
